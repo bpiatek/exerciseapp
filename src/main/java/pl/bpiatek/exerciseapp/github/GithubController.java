@@ -13,12 +13,12 @@ import pl.bpiatek.exerciseapp.github.domain.GithubFacade;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-class GithubController {
+class GithubController implements OpenApiGithubController {
 
   private final GithubFacade githubFacade;
 
   @GetMapping("users/{login}")
-  ResponseEntity<AppResponse> test(@PathVariable String login) {
+  public ResponseEntity<AppResponse> getUserInfoByLogin(@PathVariable String login) {
     AppResponse response = githubFacade.getUserInfo(GithubApiRequest.of(login));
     return ResponseEntity.ok(response);
   }
