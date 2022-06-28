@@ -6,7 +6,8 @@ import lombok.Getter;
  * Created by Bartosz Piatek on 25/06/2022
  */
 @Getter
-public class FeignExceptionMessage {
+class FeignExceptionMessage {
+
   private String timestamp;
   private int status;
   private String error;

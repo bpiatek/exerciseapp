@@ -1,4 +1,4 @@
-package pl.bpiatek.exerciseapp.github.api;
+package pl.bpiatek.exerciseapp.github.api.feign;
 
 import lombok.*;
 
@@ -8,14 +8,14 @@ import lombok.*;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GithubApiRequest {
+
   private final String login;
 
   public static GithubApiRequest of(String login) {
-    return new GithubApiRequest(login);
+    return new GithubApiRequest(login.trim().toLowerCase());
   }
 
   public String asString() {
     return login;
   }
-
 }

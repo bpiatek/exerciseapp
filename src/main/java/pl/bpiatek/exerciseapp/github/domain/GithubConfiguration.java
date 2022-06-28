@@ -10,7 +10,17 @@ import org.springframework.context.annotation.Configuration;
 class GithubConfiguration {
 
   @Bean
-  GithubFacade githubFacade(GithubApiFeignClient githubApiFeignClient) {
-    return new GithubFacade(githubApiFeignClient);
+  GithubFacade githubFacade(
+      GithubApiFeignClient githubApiFeignClient,
+      GithubRepository githubRepository
+  ) {
+    GithubCalculationsResolver githubCalculationsResolver = new GithubCalculationsResolver();
+    ApplicationResponseCreator applicationResponseCreator = new ApplicationResponseCreator(githubCalculationsResolver);
+
+    return new GithubFacade(
+        githubApiFeignClient,
+        githubRepository,
+        applicationResponseCreator
+    );
   }
 }
