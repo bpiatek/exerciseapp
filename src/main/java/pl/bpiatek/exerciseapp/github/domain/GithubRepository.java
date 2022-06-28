@@ -1,5 +1,6 @@
 package pl.bpiatek.exerciseapp.github.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -10,4 +11,6 @@ interface GithubRepository {
   GithubEntity save(GithubEntity entity);
 
   Optional<GithubEntity> findByLogin(String login);
+
+  List<GithubEntity> findAll();
 }

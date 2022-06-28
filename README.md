@@ -22,3 +22,11 @@ Open browser and go to:
 http://localhost:8080/swagger-ui.html
 ```
 There is a simple interactive documentation to try out the app.
+## If you want to test the app straight away, it is deployed here:
+### http://132.145.247.10:8080/swagger-ui/index.html
+I implemented additional endpoint 
+```shell
+http://localhost:8080/users/database
+```
+so it is easier to test if request count is increasing correctly.
+It is available in swagger as well.

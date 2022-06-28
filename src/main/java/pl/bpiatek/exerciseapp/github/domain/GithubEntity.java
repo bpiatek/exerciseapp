@@ -3,6 +3,7 @@ package pl.bpiatek.exerciseapp.github.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
 
 import java.util.Objects;
 
@@ -44,5 +45,12 @@ class GithubEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  DatabaseEntryResponse mapToDto() {
+    return new DatabaseEntryResponse(
+      this.login,
+      this.requestCount
+    );
   }
 }

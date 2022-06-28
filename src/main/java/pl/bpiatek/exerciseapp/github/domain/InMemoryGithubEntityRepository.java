@@ -1,5 +1,8 @@
 package pl.bpiatek.exerciseapp.github.domain;
 
+import org.apache.commons.lang3.NotImplementedException;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,5 +22,10 @@ class InMemoryGithubEntityRepository implements GithubRepository {
   @Override
   public Optional<GithubEntity> findByLogin(String login) {
     return Optional.ofNullable(store.get(login.toLowerCase()));
+  }
+
+  @Override
+  public List<GithubEntity> findAll() {
+    throw new NotImplementedException();
   }
 }

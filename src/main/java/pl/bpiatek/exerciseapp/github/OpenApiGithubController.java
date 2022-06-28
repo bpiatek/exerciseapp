@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import pl.bpiatek.exerciseapp.github.api.app.AppResponse;
+import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
+
+import java.util.List;
 
 /**
  * Created by Bartosz Piatek on 28/06/2022
@@ -21,4 +24,8 @@ interface OpenApiGithubController {
       @ApiResponse(responseCode = "404", description = "User does not exist")
   })
   ResponseEntity<AppResponse> getUserInfoByLogin(@PathVariable String login);
+
+  @Operation(summary = "Additional endpoint to retrieve database entries so it is easier for reviewer to test the application")
+  @ApiResponse(responseCode = "200", description = "Successfully retrieved all datavase entries")
+  ResponseEntity<List<DatabaseEntryResponse>> getAllEntriesFromDatabase();
 }
