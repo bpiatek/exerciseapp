@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * Created by Bartosz Piatek on 25/06/2022
@@ -21,6 +22,9 @@ class GithubEntity {
   @Id
   private String login;
   private int requestCount = 1;
+
+  @Version
+  private  long version;
 
   public GithubEntity(String login) {
     this.login = login;

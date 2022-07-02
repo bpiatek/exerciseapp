@@ -23,4 +23,9 @@ class GithubConfiguration {
         applicationResponseCreator
     );
   }
+
+  @Bean
+  GithubRepository githubRepository(JpaGithubRepository jpaGithubRepository) {
+    return new JpaBasedGithubRepository(jpaGithubRepository);
+  }
 }

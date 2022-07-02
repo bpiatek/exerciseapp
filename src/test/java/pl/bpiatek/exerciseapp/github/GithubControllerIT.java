@@ -1,5 +1,6 @@
 package pl.bpiatek.exerciseapp.github;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,7 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiResponse;
+import pl.bpiatek.exerciseapp.github.domain.GithubFacade;
 import pl.bpiatek.exerciseapp.github.domain.MockGithubApiFeignClient;
 
 import java.time.LocalDateTime;
@@ -38,8 +41,11 @@ class GithubControllerIT {
   @Autowired
   private MockGithubApiFeignClient mockGithubApiFeignClient;
 
+  @Autowired
+  private GithubFacade githubFacade;
+
   @Test
-  void shouldCorrectlyReturnUserFromGithubApiResponse() throws Exception {
+  void shouldCorrectlyReturnUserFromGithubApiResponseAndSaveItInDatabase() throws Exception {
     // given
     GithubApiResponse githubApiResponse = GithubApiResponse.builder()
         .id(ID)
@@ -66,5 +72,10 @@ class GithubControllerIT {
         .andExpect(jsonPath("$.createdAt", is(CREATED_AT.toString())))
         .andExpect(jsonPath("$.calculations", is(12.0)))
         .andDo(print());
+
+    // and
+    boolean containsEntry = githubFacade.showDatabaseEntries()
+        .contains(new DatabaseEntryResponse(USER_LOGIN, 1));
+    assertThat(containsEntry).isTrue();
   }
 }
