@@ -21,7 +21,8 @@ interface OpenApiGithubController {
   @Parameter(name = "login", description = "login of github user you want to get information about")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved information about user"),
-      @ApiResponse(responseCode = "404", description = "User does not exist")
+      @ApiResponse(responseCode = "404", description = "User does not exist"),
+      @ApiResponse(responseCode = "412", description = "Someone just modified entity you are trying to access")
   })
   ResponseEntity<AppResponse> getUserInfoByLogin(@PathVariable String login);
 
