@@ -3,7 +3,7 @@ package pl.bpiatek.exerciseapp.github.domain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.repository.Repository;
-import pl.bpiatek.exerciseapp.infrastructure.exceptions.StaleStateIdentified;
+import pl.bpiatek.exerciseapp.infrastructure.exceptions.StaleStateIdentifiedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ class JpaBasedGithubRepository implements GithubRepository {
     try {
       return githubRepository.save(entity);
     } catch (OptimisticLockingFailureException ex) {
-      throw StaleStateIdentified.forGithubEntityWithLogin(entity.getLogin());
+      throw StaleStateIdentifiedException.forGithubEntityWithLogin(entity.getLogin());
     }
   }
 

@@ -1,21 +1,15 @@
 package pl.bpiatek.exerciseapp.github.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
-import pl.bpiatek.exerciseapp.github.api.app.AppResponse;
+import pl.bpiatek.exerciseapp.github.api.app.GithubSaved;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiRequest;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiResponse;
 
@@ -47,10 +41,10 @@ class GithubFacadeTest {
         .willReturn(ResponseEntity.ok(prepareApiResponse(12L)));
 
     // when
-    AppResponse actual = githubFacade.getUserInfo(request);
+    GithubSaved actual = (GithubSaved) githubFacade.getUserInfo(request);
 
     // then
-    assertThat(actual.getId()).isEqualTo(12L);
+    assertThat(actual.getView().getId()).isEqualTo(12L);
   }
 
   @Test

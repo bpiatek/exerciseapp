@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Builder
 @Getter
-public class AppResponse {
+public class GithubView {
 
   private Long id;
   private String login;

@@ -3,7 +3,7 @@ package pl.bpiatek.exerciseapp.github.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
+import pl.bpiatek.exerciseapp.github.api.app.GithubEntityView;
 
 import java.util.Objects;
 
@@ -51,10 +51,11 @@ class GithubEntity {
     return getClass().hashCode();
   }
 
-  DatabaseEntryResponse mapToDto() {
-    return new DatabaseEntryResponse(
-      this.login,
-      this.requestCount
+  GithubEntityView mapToDto() {
+    return new GithubEntityView(
+        this.login,
+        this.requestCount,
+        this.version
     );
   }
 }
