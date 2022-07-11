@@ -3,13 +3,13 @@ package pl.bpiatek.exerciseapp.github.domain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import pl.bpiatek.exerciseapp.github.api.app.AppResponse;
-import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
+import pl.bpiatek.exerciseapp.github.api.app.*;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiRequest;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiResponse;
+import pl.bpiatek.exerciseapp.infrastructure.exceptions.NotFoundException;
+import pl.bpiatek.exerciseapp.infrastructure.exceptions.StaleStateIdentifiedException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Bartosz Piatek on 25/06/2022
@@ -21,26 +21,34 @@ public class GithubFacade {
   private final GithubRepository githubRepository;
   private final ApplicationResponseCreator applicationResponseCreator;
 
-  @Transactional
-  public AppResponse getUserInfo(GithubApiRequest request) {
-    ResponseEntity<GithubApiResponse> githubApiResponse = apiFeignClient.getUserDetails(request.asString());
+  @Transactional(noRollbackFor = NotFoundException.class)
+  public Result getUserInfo(GithubApiRequest request) {
+    try {
+      updateCounter(request);
+      ResponseEntity<GithubApiResponse> githubApiResponse = apiFeignClient.getUserDetails(request.asString());
+      return new GithubSaved(applicationResponseCreator.create(githubApiResponse.getBody()));
+    } catch (StaleStateIdentifiedException e) {
+      GithubEntity currentState = githubRepository.findByLogin(request.asString()).orElse(null);
+      if(currentState == null) {
+        return new GithubNotFound();
+      }
+      return new GithubConflictIdentified(currentState.mapToDto());
+    }
+  }
 
+  public List<GithubEntityView> showDatabaseEntries() {
+    return githubRepository.findAll().stream()
+        .map(GithubEntity::mapToDto)
+        .toList();
+  }
+
+  private void updateCounter(GithubApiRequest request) {
     githubRepository.findByLogin(request.asString())
         .ifPresentOrElse(
             GithubEntity::increaseRequestCount,
             () -> save(request)
         );
-
-    return applicationResponseCreator.create(githubApiResponse.getBody());
   }
-
-  public List<DatabaseEntryResponse> showDatabaseEntries() {
-    return githubRepository.findAll().stream()
-        .map(GithubEntity::mapToDto)
-        .collect(Collectors.toList());
-  }
-
-
   private void save(GithubApiRequest request) {
     githubRepository.save(new GithubEntity(request.asString()));
   }

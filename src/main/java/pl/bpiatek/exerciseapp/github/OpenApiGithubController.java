@@ -7,8 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import pl.bpiatek.exerciseapp.github.api.app.AppResponse;
-import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
+import pl.bpiatek.exerciseapp.github.api.app.GithubEntityView;
 
 import java.util.List;
 
@@ -22,11 +21,11 @@ interface OpenApiGithubController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved information about user"),
       @ApiResponse(responseCode = "404", description = "User does not exist"),
-      @ApiResponse(responseCode = "412", description = "Someone just modified entity you are trying to access")
+      @ApiResponse(responseCode = "409", description = "Someone just modified entity you are trying to save")
   })
-  ResponseEntity<AppResponse> getUserInfoByLogin(@PathVariable String login);
+  ResponseEntity<?> getUserInfoByLogin(@PathVariable String login);
 
   @Operation(summary = "Additional endpoint to retrieve database entries so it is easier for reviewer to test the application")
-  @ApiResponse(responseCode = "200", description = "Successfully retrieved all datavase entries")
-  ResponseEntity<List<DatabaseEntryResponse>> getAllEntriesFromDatabase();
+  @ApiResponse(responseCode = "200", description = "Successfully retrieved all database entries")
+  ResponseEntity<List<GithubEntityView>> getAllEntriesFromDatabase();
 }

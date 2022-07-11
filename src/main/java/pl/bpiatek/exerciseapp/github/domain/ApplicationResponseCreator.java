@@ -1,7 +1,7 @@
 package pl.bpiatek.exerciseapp.github.domain;
 
 import lombok.RequiredArgsConstructor;
-import pl.bpiatek.exerciseapp.github.api.app.AppResponse;
+import pl.bpiatek.exerciseapp.github.api.app.GithubView;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiResponse;
 
 /**
@@ -12,8 +12,8 @@ class ApplicationResponseCreator {
 
   private final GithubCalculationsResolver githubCalculationsResolver;
 
-  AppResponse create(GithubApiResponse githubApiResponse) {
-    return AppResponse.builder()
+  GithubView create(GithubApiResponse githubApiResponse) {
+    return GithubView.builder()
         .id(githubApiResponse.getId())
         .login(githubApiResponse.getLogin())
         .name(githubApiResponse.getName())

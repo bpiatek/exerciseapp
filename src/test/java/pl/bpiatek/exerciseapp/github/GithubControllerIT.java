@@ -14,12 +14,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import pl.bpiatek.exerciseapp.github.api.app.DatabaseEntryResponse;
+import pl.bpiatek.exerciseapp.github.api.app.GithubEntityView;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiResponse;
 import pl.bpiatek.exerciseapp.github.domain.GithubFacade;
 import pl.bpiatek.exerciseapp.github.domain.MockGithubApiFeignClient;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Created by Bartosz Piatek on 28/06/2022
@@ -74,8 +75,9 @@ class GithubControllerIT {
         .andDo(print());
 
     // and
-    boolean containsEntry = githubFacade.showDatabaseEntries()
-        .contains(new DatabaseEntryResponse(USER_LOGIN, 1));
-    assertThat(containsEntry).isTrue();
+    Optional<GithubEntityView> containsEntry = githubFacade.showDatabaseEntries()
+        .stream().filter(entry -> entry.getLogin().equals(USER_LOGIN))
+        .findAny();
+    assertThat(containsEntry).isPresent();
   }
 }
