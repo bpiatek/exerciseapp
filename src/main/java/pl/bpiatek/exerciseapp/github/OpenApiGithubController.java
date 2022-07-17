@@ -2,12 +2,15 @@ package pl.bpiatek.exerciseapp.github;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import pl.bpiatek.exerciseapp.github.api.app.GithubEntityView;
+import pl.bpiatek.exerciseapp.github.api.app.GithubView;
 
 import java.util.List;
 
@@ -16,12 +19,28 @@ import java.util.List;
  */
 @Tag(name = "Github controller")
 interface OpenApiGithubController {
+
   @Operation(summary = "Get information about github user by passing it's login")
   @Parameter(name = "login", description = "login of github user you want to get information about")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully retrieved information about user"),
-      @ApiResponse(responseCode = "404", description = "User does not exist"),
-      @ApiResponse(responseCode = "409", description = "Someone just modified entity you are trying to save")
+      @ApiResponse(responseCode = "200",
+          description = "Successfully retrieved information about user",
+          content = {@Content(
+              schema = @Schema(implementation = GithubView.class)
+          )}
+      ),
+      @ApiResponse(responseCode = "404",
+          description = "User does not exist",
+          content = {@Content(
+          schema = @Schema(implementation = Void.class)
+      )}
+      ),
+      @ApiResponse(responseCode = "409",
+          description = "Someone just modified entity you are trying to save",
+          content = {@Content(
+              schema = @Schema(implementation = GithubEntityView.class)
+          )}
+      )
   })
   ResponseEntity<?> getUserInfoByLogin(@PathVariable String login);
 
