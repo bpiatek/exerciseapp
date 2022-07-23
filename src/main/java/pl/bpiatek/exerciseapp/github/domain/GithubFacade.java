@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.bpiatek.exerciseapp.github.api.app.*;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiRequest;
 import pl.bpiatek.exerciseapp.github.api.feign.GithubApiResponse;
+import pl.bpiatek.exerciseapp.infrastructure.exceptions.GeneralException;
 import pl.bpiatek.exerciseapp.infrastructure.exceptions.NotFoundException;
 import pl.bpiatek.exerciseapp.infrastructure.exceptions.StaleStateIdentifiedException;
 
@@ -23,7 +24,7 @@ public class GithubFacade {
   private final GithubRepository githubRepository;
   private final ApplicationResponseCreator applicationResponseCreator;
 
-  @Transactional(noRollbackFor = NotFoundException.class)
+  @Transactional(noRollbackFor = {NotFoundException.class, GeneralException.class})
   public Result getUserInfo(GithubApiRequest request) {
     try {
       return getUserInfoAndUpdateCounter(request);
