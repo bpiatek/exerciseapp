@@ -6,6 +6,7 @@ import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
 import pl.bpiatek.exerciseapp.infrastructure.exceptions.BadRequestException;
+import pl.bpiatek.exerciseapp.infrastructure.exceptions.GeneralException;
 import pl.bpiatek.exerciseapp.infrastructure.exceptions.NotFoundException;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.io.InputStream;
 @Slf4j
 class ApplicationFeignErrorDecoder implements ErrorDecoder {
 
-  private final ErrorDecoder errorDecoder = new Default();
+  private static final String USER_PATH = "/users/";
 
   @Override
   public Exception decode(String methodKey, Response response) {
@@ -31,13 +32,15 @@ class ApplicationFeignErrorDecoder implements ErrorDecoder {
     }
 
     switch (response.status()) {
-      case 400:
-        throw new BadRequestException(message.getMessage() != null ? message.getMessage() : "Bad Request");
-      case 404:
+      case 400 -> throw new BadRequestException(message.getMessage() != null ? message.getMessage() : "Bad Request");
+      case 404 -> {
         log.info("Github user: {} not found.", extractUserNameFromResponse(response));
         throw new NotFoundException(message.getMessage() != null ? message.getMessage() : "Not found");
-      default:
-        return errorDecoder.decode(methodKey, response);
+      }
+      default -> throw new GeneralException(response.status(),
+                                            response.reason(),
+                                            USER_PATH + extractUserNameFromResponse(response)
+      );
     }
   }
 
