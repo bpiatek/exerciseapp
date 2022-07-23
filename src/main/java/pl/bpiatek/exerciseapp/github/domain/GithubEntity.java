@@ -24,7 +24,7 @@ class GithubEntity {
   private int requestCount = 1;
 
   @Version
-  private  long version;
+  private long version;
 
   public GithubEntity(String login) {
     this.login = login;
